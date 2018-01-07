@@ -5,6 +5,8 @@ const getYouTubeID = require('get-youtube-id');
 const yt_api_key = "AIzaSyCPCUsqY4I55P2AN76KR68T6hmkGYCjCnc";
 const prefix = "!";
 
+var bot = new Discord.Client();
+
 bot.on("ready", () => {
   console.log("Ready")
   bot.user.setGame("!help", 'https://go.twitch.tv/zatrix15')
