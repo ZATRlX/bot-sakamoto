@@ -1,13 +1,8 @@
 const Discord = require("discord.js");
-const ytdl = require('ytdl-core');
-const request = require('request');
-const getYouTubeID = require('get-youtube-id');
-const yt_api_key = "AIzaSyCPCUsqY4I55P2AN76KR68T6hmkGYCjCnc";
-const prefix = "!";
 
 var bot = new Discord.Client();
 
-bot.on("ready", () => {
+bot.on("ready", function() => {
   console.log("Ready")
   bot.user.setGame("!help", 'https://go.twitch.tv/zatrix15')
 });
