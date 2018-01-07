@@ -9,6 +9,12 @@
   "author": "Zatrix",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.2.1"
+    "async": "^2.6.0",
+    "asyncwait": "^1.0.2",
+    "discord.js": "^11.2.1",
+    "get-youtube-id": "^1.0.0",
+    "request": "^2.83.0",
+    "ytdl-core": "^0.18.5"
+	"opusscript": "0.0.3",
   }
 }
