@@ -3,10 +3,7 @@ const ytdl = require('ytdl-core');
 const request = require('request');
 const getYouTubeID = require('get-youtube-id');
 const yt_api_key = "AIzaSyCPCUsqY4I55P2AN76KR68T6hmkGYCjCnc";
-const bot_controller = config.bot_controller;
 const prefix = "!";
-const async = require('asyncawait');
-const await = require('asyncawait');
 
 var bot = new Discord.Client();
 
@@ -61,13 +58,13 @@ bot.on('message', message => {
 	
 	//if(!command.startsWith(prefix)) return;
 	
-	var args2 = message.content.substring(config.prefix.length).split(" ");
+	var args2 = message.content.substring(prefix.length).split(" ");
 	const command2 = args2.shift().toLowerCase();
 	
-	var args3 = message.content.substring(config.prefix.length).split(", ");
+	var args3 = message.content.substring(prefix.length).split(", ");
 	const command3 = args3.shift().toLowerCase();
 	
-	const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+	const args = message.content.slice(prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
 	//let messageArray = message.content.split(" ");
 	//let command2 = messageArray[0];
@@ -1556,5 +1553,64 @@ if (command === 'stop') {
 }
 */
 });
+
+function getID(str, callback) {
+            if (str.includes('youtube.com')) {
+                callback(getYouTubeID(str));
+            } else {
+                search_video(str, (id) => {
+                    callback(id);
+                });
+            }
+}
+
+function search_video(query, callback) {
+            request("https://www.googleapis.com/youtube/v3/search?part=id&type=video&q=" + encodeURIComponent(query) + "&key=" + config.yt_api_key, (error, response, body) => {
+                if (error) return message.reply('There was an error finding that song');
+                try {
+                    const json = JSON.parse(body);
+                    callback(json.items[0].id.videoId);
+                } catch (e) {
+                    callback(null);
+                }
+            });
+}
+
+       function playMusic(guild, message) {
+		   const voiceChannel = message.member.voiceChannel;
+
+            voiceChannel.join().then(connection => {
+                guild.skippers = [];
+                const stream = ytdl.downloadFromInfo(guild.queue[0].info, {
+                    filter: 'audioonly'
+                });
+                message.channel.send(`Now playing: **${guild.queue[0].info.title}** as requested by ${guild.queue[0].requester.displayName}`);
+
+                const dispatcher = connection.playStream(stream);
+                dispatcher.on('error', console.log);
+                dispatcher.on('debug', console.log);
+                dispatcher.on('end', () => {
+                    guild.queue.shift();
+					if(noMoreMusic === 0)
+					{
+						if (guild.queue.length === 0) {
+							guild.isPlaying = false;
+							setTimeout(() => {
+								voiceChannel.leave();
+								return message.channel.send('Queue is empty. Queue up some more tunes!');
+							}, 2500);
+						} else {
+							setTimeout(() => {
+								playMusic(guild, message);
+							}, 500);
+						}
+					}
+                });
+            });
+}
+
+function skip_song(message) {
+  message.guild.voiceConnection.dispatcher.end()
+}
 
 bot.login("Mzk5NjY2ODI5ODA0NTY4NTc2.DTQaTA.J8q5buerrp5awRSVh7TID7VPIkQ");
