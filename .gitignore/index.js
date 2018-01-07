@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 
 var bot = new Discord.Client();
 
-bot.on("ready", function() => {
+bot.on("ready", function() {
   console.log("Ready")
   bot.user.setGame("!help", 'https://go.twitch.tv/zatrix15')
 });
