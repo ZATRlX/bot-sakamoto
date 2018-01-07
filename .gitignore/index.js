@@ -39,7 +39,6 @@ var TableVoteTempsNotChange = [];
 // VOTES
 
 let music = {};
-bot.login(token);
 
 bot.on("ready", () => {
   console.log("Ready")
